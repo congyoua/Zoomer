@@ -1,0 +1,49 @@
+version: "3.8"
+services:
+  locationmicroservice:
+    build: 
+        context: ./LocationMicroservice
+        dockerfile: Dockerfile
+    depends_on:
+      - neo4j
+    ports:
+      - "8000:8000"
+  usermicroservice:
+    build: 
+        context: ./UserMicroservice
+        dockerfile: Dockerfile
+    depends_on:
+      - postgres
+    ports:
+      - "8001:8000"
+  tripinfomicroservice:
+    build: 
+        context: ./TripinfoMicroservice
+        dockerfile: Dockerfile
+    depends_on:
+      - mongodb
+    ports:
+      - "8002:8000"
+  mongodb:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: 123456
+      MONGO_INITDB_DATABASE: trip
+    ports:
+      - "27017:27017"
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_USER: root
+    ports:
+      - "5432:5432"
+  neo4j:
+    image: neo4j:latest
+    environment:
+      - NEO4J_AUTH=neo4j/123456
+    ports:
+      - '7474:7474'
+      - '7473:7473'
+      - '7687:7687'
